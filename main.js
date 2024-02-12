@@ -1,4 +1,5 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const appMenu = require('./menu')
 
 app.on('ready', () => {
     console.log("Application is ready");
@@ -14,4 +15,10 @@ app.on('ready', () => {
     });
     mainWindow.loadFile('index.html')
 
-})
+});
+
+
+
+//attach out templatte to the app meun object
+Menu.setApplicationMenu(appMenu);
+
