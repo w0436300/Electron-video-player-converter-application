@@ -1,5 +1,7 @@
 const { app, BrowserWindow, ipcMain, Menu } = require('electron');
 const appMenu = require('./menu')
+const path = require('path');
+
 
 app.on('ready', () => {
     console.log("Application is ready");
@@ -13,7 +15,7 @@ app.on('ready', () => {
 
         }
     });
-    mainWindow.loadFile('index.html')
+     mainWindow.loadFile('index.html')
 
 });
 
