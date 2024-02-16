@@ -1,8 +1,9 @@
-const { Menu, dialog,ipcMain,ipcRenderer } = require('electron');
+const { Menu, dialog } = require('electron');
 const isMac = process.platform === 'darwin';
 
 
-//MENU Code
+function menu(mainWindow) {
+    //MENU Code
 //create a menu
 
 //define a new template
@@ -32,7 +33,7 @@ const menuTemplate = [
                                     console.log('user cancel')
                                 } else {
                                     console.log(`user selected: ${videoPath}`)
-                                    // mainWindow.webContents.send('fileSelected', videoPath);
+                                    parentWindow.webContents.send('fileSelected', videoPath);
                                 }
                                 
                         });      
@@ -75,4 +76,9 @@ if(isMac) {
         }
     );
 }
-module.exports = Menu.buildFromTemplate(menuTemplate);
+
+return Menu.buildFromTemplate(menuTemplate);
+
+}
+
+module.exports = menu;
