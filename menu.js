@@ -2,7 +2,7 @@ const { Menu, dialog } = require('electron');
 const isMac = process.platform === 'darwin';
 
 
-function menu(mainWindow) {
+
     //MENU Code
 //create a menu
 
@@ -76,9 +76,6 @@ if(isMac) {
         }
     );
 }
+module.exports = Menu.buildFromTemplate(menuTemplate);
 
-return Menu.buildFromTemplate(menuTemplate);
 
-}
-
-module.exports = menu;
