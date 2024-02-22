@@ -34,23 +34,39 @@ const menuTemplate = [
                                 } else {
                                     console.log(`user selected: ${videoPath}`)
                                     parentWindow.webContents.send('fileSelected', videoPath);
+                                    const menu = Menu.getApplicationMenu();
+                                    menu.getMenuItemById('convertToAVI').enabled = true;
+                                    menu.getMenuItemById('convertToMp4').enabled = true;
+                                    menu.getMenuItemById('convertToWEBM').enabled = true                        
                                 }
                                 
                         });      
                        
                      }   
                     },
+                    { type: 'separator' },
                     {
-                        label:"show message...",
-                        click(event, parentWindow) {
-                            dialog.showMessageBox(parentWindow,{
-                                type:'warning',
-                                title:"Message from Claire",
-                                message:"your cpu is overheating"
-                            });
-                        }
+                        label:"Convert to AVI",
+                        enabled: false,
+                        id:'convertToAVI'
+                       
+                    },
+                   
+                    {
+                        label:"Convert to MP4",
+                        enabled: false,
+                        id:'convertToMp4'
                     
-                    }
+                    },
+                    {
+                        label:"Convert to WEBM",
+                        enabled: false,
+                        id:'convertToWEBM'
+                      
+                    
+                    },
+                    
+                    
                 ]
             },
             { type: 'separator' },
