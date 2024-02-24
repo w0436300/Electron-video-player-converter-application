@@ -124,6 +124,9 @@ function convertVideo(format, parentWindow) {
 
             ffmpeg(videoPath)
                 .toFormat(format)
+                .on('progress', function(progress) {
+                        console.log( progress);
+                      })
                 .on('error', err => console.error(err))
                 .on('end', () => console.log(`Conversion to ${format} finished!`))
                 .save(outputPath);
