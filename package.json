@@ -14,7 +14,10 @@
     "electron": "^28.2.2",
     "electron-progressbar": "^2.2.1",
     "ffmpeg-static": "^5.2.0",
+    "ffmpeg-static-electron": "^2.0.3",
     "ffprobe-static": "^3.1.0",
-    "fluent-ffmpeg": "^2.1.2"
+    "ffprobe-static-electron": "^2.0.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "path": "^0.12.7"
   }
 }

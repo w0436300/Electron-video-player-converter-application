@@ -1,9 +1,14 @@
 const { Menu, dialog } = require('electron');
 const isMac = process.platform === 'darwin';
+const ffmpeg = require('fluent-ffmpeg');
+const ffmpeg_static = require('ffmpeg-static-electron');
+const ffprobe_static = require('ffprobe-static-electron'); 
+const path = require('path');
 
-
-
-    //MENU Code
+ffmpeg.setFfmpegPath(ffmpeg_static.path);
+ffmpeg.setFfprobePath(ffprobe_static.path)
+let videoPath;
+ //MENU Code
 //create a menu
 
 //define a new template
@@ -18,17 +23,16 @@ const menuTemplate = [
                      click: (event, parentWindow) => {
                         let dialogOptions = {
                             filters:[
-                                        { name: 'Movies', extensions: ['mkv', 'avi', 'mp4'] },
-                                        { name: 'All Files', extensions: ['*'] }
+                                      { name: 'Movies', extensions: ['mkv', 'avi', 'mp4'] },
+                                      { name: 'All Files', extensions: ['*'] }
                                     ],
                             title:"open file",
-                            message:"please a valid video"
+                            message:"please choose a valid video"
                         }
 
                        
                         dialog.showOpenDialog(parentWindow,dialogOptions).then((fileInfo) => {
-                                const videoPath=fileInfo.filePaths[0];
-                                console.log(fileInfo);
+                                 videoPath=fileInfo.filePaths[0];
                                 if (fileInfo.canceled) {
                                     console.log('user cancel')
                                 } else {
@@ -48,29 +52,32 @@ const menuTemplate = [
                     {
                         label:"Convert to AVI",
                         enabled: false,
-                        id:'convertToAVI'
-                       
+                        id:'convertToAVI',  
+                        click: (event,parentWindow) => {
+                            convertVideo('avi', parentWindow);               
+                        }            
                     },
                    
                     {
                         label:"Convert to MP4",
                         enabled: false,
-                        id:'convertToMp4'
+                        id:'convertToMp4',
+                        click: (event,parentWindow) => {
+                            convertVideo('mp4', parentWindow);   
+                        }        
                     
                     },
                     {
                         label:"Convert to WEBM",
                         enabled: false,
-                        id:'convertToWEBM'
-                      
-                    
-                    },
-                    
-                    
+                        id:'convertToWEBM',
+                        click: (event,parentWindow) => {
+                            convertVideo('webm', parentWindow);                                
+                        }                              
+                    },                       
                 ]
             },
-            { type: 'separator' },
-           
+            { type: 'separator' },           
             
             isMac ? { role: 'close' } : { role: 'quit' }
         ]
@@ -92,6 +99,38 @@ if(isMac) {
         }
     );
 }
+
+//define a function to handle savedialog and conversion
+function convertVideo(format, parentWindow) {
+    let options = { 
+        title: 'Save video',
+        defaultPath: path.format({
+            dir: path.dirname(videoPath),
+            name: path.basename(videoPath, path.extname(videoPath)),
+            ext: `.${format}`
+        }),
+        buttonLabel: 'Save',
+        filters: [{ name: 'Videos', extensions: [format] }]
+    };
+
+    dialog.showSaveDialog(parentWindow, options)
+        .then((saveFile) => {
+            if (saveFile.canceled) {
+                console.log('User cancelled the save dialog');
+                return;
+            }
+
+            let outputPath = saveFile.filePath;
+
+            ffmpeg(videoPath)
+                .toFormat(format)
+                .on('error', err => console.error(err))
+                .on('end', () => console.log(`Conversion to ${format} finished!`))
+                .save(outputPath);
+        });
+}
+
+
 module.exports = Menu.buildFromTemplate(menuTemplate);
 
 
