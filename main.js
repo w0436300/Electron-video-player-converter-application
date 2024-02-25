@@ -65,21 +65,22 @@ ipcMain.on('convertVideo',(event,videoPath, format) => {
             //progress bar events
             progressBar
                 .on('completed', function() {
-                console.info(`completed...`);
-                progressBar.detail = 'Task completed. Exiting...';
-                event.sender.send('progressCompleted', `progressCompleted`);
+                    console.info(`completed...`);
+                    progressBar.detail = 'Task completed. Exiting...';
+                    event.sender.send('progressCompleted', `progressCompleted`);
             
                 })
                 .on('aborted', function(value) {
-                console.info(`aborted... ${value}`);
+                    console.info(`aborted... ${value}`);
                 })
                 .on('progress', function(value) {
-                progressBar.detail = `Value ${value} out of ${progressBar.getOptions().maxValue}...`;
+                    progressBar.detail = `Value ${value} out of ${progressBar.getOptions().maxValue}...`;
                 });
 
             ffmpeg(videoPath)
                 .toFormat(format)
                 .on('progress', function(progress) {
+                    console.log(progress);
                     if (progressBar) {
                         progressBar.value = progress.percent;
                         progressBar.detail = `${progress.percent.toFixed(2)}% completed`;
